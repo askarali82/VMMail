@@ -80,6 +80,7 @@ void MainFrame::SetBitmaps()
     m_MoveToolButton->SetNormalBitmap(wxICON(move));
     m_DeleteToolBtn->SetNormalBitmap(wxICON(delete));
     m_RefreshToolBtn->SetNormalBitmap(wxICON(refresh));
+    m_AboutToolBtn->SetNormalBitmap(wxICON(about));
     m_toolBar->Realize();
     m_AttachmentsButton->SetBitmap(wxIcon(wxT("attach"), wxBITMAP_TYPE_ICO_RESOURCE, 16, 16));
 }
@@ -870,4 +871,11 @@ void MainFrame::OnMoveButtonClicked(wxCommandEvent& event)
     {
         m_StatusBar->SetStatusText("Please select a folder to move to", 3);
     }
+}
+
+
+void MainFrame::OnAboutButtonClicked(wxCommandEvent& event)
+{
+    AboutDialog Dlg(NULL);
+    Dlg.ShowModal();
 }

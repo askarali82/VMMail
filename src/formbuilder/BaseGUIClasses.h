@@ -33,6 +33,8 @@
 #include <wx/dialog.h>
 #include <wx/listbox.h>
 #include <wx/choice.h>
+#include <wx/statbmp.h>
+#include <wx/gbsizer.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -44,35 +46,36 @@
 #define ID_MOVE_BUTTON 1005
 #define ID_DELETE_BUTTON 1006
 #define ID_REFRESH_BUTTON 1007
-#define ID_ACC_LIST 1008
-#define ID_MSG_LIST 1009
-#define ID_ATTACHES_BUTTON 1010
-#define ID_LOAD_TIMER 1011
-#define ID_TO_FIELD 1012
-#define ID_ATTACHMENTLIST 1013
-#define ID_ADDATTACHMENT 1014
-#define ID_DELETEATTACHMENT 1015
-#define ID_FONT_SELECTOR 1016
-#define ID_FONTSIZE_SELECTOR 1017
-#define ID_BOLD_BUTTON 1018
-#define ID_ITALIC_BUTTON 1019
-#define ID_UNDERLINE_BUTTON 1020
-#define ID_STRIKETHROUGH 1021
-#define ID_SUBSCRIPT 1022
-#define ID_SUPERSCRIPT 1023
-#define ID_TEXT_COLOR 1024
-#define ID_BCKG_COLOR 1025
-#define ID_CLEAR_FORMATTING 1026
-#define ID_ALIGN_LEFT 1027
-#define ID_ALIGN_CENTER 1028
-#define ID_ALIGN_RIGHT 1029
-#define ID_ALIGN_JUSTIFY 1030
-#define ID_ORDERED_LIST 1031
-#define ID_UNORDERED_LIST 1032
-#define ID_ADD_IMAGE 1033
-#define ID_INSERT_LINK 1034
-#define ID_DISCARD_BUTTON 1035
-#define ID_SEND_BUTTON 1036
+#define ID_ABOUT_BUTTON 1008
+#define ID_ACC_LIST 1009
+#define ID_MSG_LIST 1010
+#define ID_ATTACHES_BUTTON 1011
+#define ID_LOAD_TIMER 1012
+#define ID_TO_FIELD 1013
+#define ID_ATTACHMENTLIST 1014
+#define ID_ADDATTACHMENT 1015
+#define ID_DELETEATTACHMENT 1016
+#define ID_FONT_SELECTOR 1017
+#define ID_FONTSIZE_SELECTOR 1018
+#define ID_BOLD_BUTTON 1019
+#define ID_ITALIC_BUTTON 1020
+#define ID_UNDERLINE_BUTTON 1021
+#define ID_STRIKETHROUGH 1022
+#define ID_SUBSCRIPT 1023
+#define ID_SUPERSCRIPT 1024
+#define ID_TEXT_COLOR 1025
+#define ID_BCKG_COLOR 1026
+#define ID_CLEAR_FORMATTING 1027
+#define ID_ALIGN_LEFT 1028
+#define ID_ALIGN_CENTER 1029
+#define ID_ALIGN_RIGHT 1030
+#define ID_ALIGN_JUSTIFY 1031
+#define ID_ORDERED_LIST 1032
+#define ID_UNORDERED_LIST 1033
+#define ID_ADD_IMAGE 1034
+#define ID_INSERT_LINK 1035
+#define ID_DISCARD_BUTTON 1036
+#define ID_SEND_BUTTON 1037
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class BaseMainFrame
@@ -91,6 +94,7 @@ class BaseMainFrame : public wxFrame
 		wxToolBarToolBase* m_MoveToolButton;
 		wxToolBarToolBase* m_DeleteToolBtn;
 		wxToolBarToolBase* m_RefreshToolBtn;
+		wxToolBarToolBase* m_AboutToolBtn;
 		wxStatusBar* m_StatusBar;
 		wxSplitterWindow* m_AccountsEmailsSplitterWndWindow;
 		wxPanel* m_AccountsPanel;
@@ -133,6 +137,7 @@ class BaseMainFrame : public wxFrame
 		virtual void OnMoveButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDeleteButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnRefreshButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnAboutButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAccountDoubleClicked( wxDataViewEvent& event ) { event.Skip(); }
 		virtual void OnFolderSelected( wxDataViewEvent& event ) { event.Skip(); }
 		virtual void OnEmailMessageSelected( wxDataViewEvent& event ) { event.Skip(); }
@@ -307,6 +312,29 @@ class AnimationWindow : public wxDialog
 
 		AnimationWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 32,32 ), long style = wxSTAY_ON_TOP );
 		~AnimationWindow();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class AboutDialog
+///////////////////////////////////////////////////////////////////////////////
+class AboutDialog : public wxDialog
+{
+	private:
+
+	protected:
+		wxStaticBitmap* m_bitmap3;
+		wxStaticText* m_staticText29;
+		wxStaticText* m_staticText30;
+		wxStaticText* m_staticText33;
+		wxStaticText* m_staticText31;
+		wxStaticText* m_staticText32;
+		wxButton* m_button8;
+
+	public:
+
+		AboutDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 353,206 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~AboutDialog();
 
 };
 

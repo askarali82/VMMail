@@ -7,6 +7,7 @@
 
 #include "BaseGUIClasses.h"
 
+#include "../bitmaps/about.xpm"
 #include "../bitmaps/addaccount.xpm"
 #include "../bitmaps/aligncenter.xpm"
 #include "../bitmaps/alignjustify.xpm"
@@ -18,6 +19,7 @@
 #include "../bitmaps/clearformatting.xpm"
 #include "../bitmaps/delattach.xpm"
 #include "../bitmaps/delete.xpm"
+#include "../bitmaps/email.xpm"
 #include "../bitmaps/fgcolor.xpm"
 #include "../bitmaps/forward.xpm"
 #include "../bitmaps/insertlink.xpm"
@@ -67,6 +69,10 @@ BaseMainFrame::BaseMainFrame( wxWindow* parent, wxWindowID id, const wxString& t
 	m_toolBar->AddSeparator();
 
 	m_RefreshToolBtn = m_toolBar->AddTool( ID_REFRESH_BUTTON, wxT("Reload"), wxBitmap( refresh_xpm ), wxNullBitmap, wxITEM_NORMAL, wxT("Reload"), wxEmptyString, NULL );
+
+	m_toolBar->AddSeparator();
+
+	m_AboutToolBtn = m_toolBar->AddTool( ID_ABOUT_BUTTON, wxT("About"), wxBitmap( about_xpm ), wxNullBitmap, wxITEM_NORMAL, wxT("About"), wxEmptyString, NULL );
 
 	m_toolBar->Realize();
 
@@ -252,6 +258,7 @@ BaseMainFrame::BaseMainFrame( wxWindow* parent, wxWindowID id, const wxString& t
 	this->Connect( m_MoveToolButton->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnMoveButtonClicked ) );
 	this->Connect( m_DeleteToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnDeleteButtonClicked ) );
 	this->Connect( m_RefreshToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnRefreshButtonClicked ) );
+	this->Connect( m_AboutToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnAboutButtonClicked ) );
 	m_AccountListTree->Connect( wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED, wxDataViewEventHandler( BaseMainFrame::OnAccountDoubleClicked ), NULL, this );
 	m_AccountListTree->Connect( wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, wxDataViewEventHandler( BaseMainFrame::OnFolderSelected ), NULL, this );
 	m_EmailListTree->Connect( wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, wxDataViewEventHandler( BaseMainFrame::OnEmailMessageSelected ), NULL, this );
@@ -271,6 +278,7 @@ BaseMainFrame::~BaseMainFrame()
 	this->Disconnect( m_MoveToolButton->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnMoveButtonClicked ) );
 	this->Disconnect( m_DeleteToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnDeleteButtonClicked ) );
 	this->Disconnect( m_RefreshToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnRefreshButtonClicked ) );
+	this->Disconnect( m_AboutToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnAboutButtonClicked ) );
 	m_AccountListTree->Disconnect( wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED, wxDataViewEventHandler( BaseMainFrame::OnAccountDoubleClicked ), NULL, this );
 	m_AccountListTree->Disconnect( wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, wxDataViewEventHandler( BaseMainFrame::OnFolderSelected ), NULL, this );
 	m_EmailListTree->Disconnect( wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, wxDataViewEventHandler( BaseMainFrame::OnEmailMessageSelected ), NULL, this );
@@ -708,5 +716,55 @@ AnimationWindow::AnimationWindow( wxWindow* parent, wxWindowID id, const wxStrin
 }
 
 AnimationWindow::~AnimationWindow()
+{
+}
+
+AboutDialog::AboutDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+
+	wxGridBagSizer* gbSizer1;
+	gbSizer1 = new wxGridBagSizer( 0, 0 );
+	gbSizer1->SetFlexibleDirection( wxBOTH );
+	gbSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_bitmap3 = new wxStaticBitmap( this, wxID_ANY, wxBitmap( email_xpm ), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_bitmap3, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxLEFT|wxRIGHT|wxTOP, 15 );
+
+	m_staticText29 = new wxStaticText( this, wxID_ANY, wxT("VMMail v1.0"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText29->Wrap( -1 );
+	m_staticText29->SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+
+	gbSizer1->Add( m_staticText29, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxTOP, 20 );
+
+	m_staticText30 = new wxStaticText( this, wxID_ANY, wxT("An Open Source Mail User Agent "), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText30->Wrap( -1 );
+	gbSizer1->Add( m_staticText30, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxTOP, 5 );
+
+	m_staticText33 = new wxStaticText( this, wxID_ANY, wxT("Developed by: Askarali Azimov"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText33->Wrap( -1 );
+	gbSizer1->Add( m_staticText33, wxGBPosition( 2, 1 ), wxGBSpan( 1, 1 ), wxTOP, 5 );
+
+	m_staticText31 = new wxStaticText( this, wxID_ANY, wxT("wxWidgets: 3.1.3"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText31->Wrap( -1 );
+	gbSizer1->Add( m_staticText31, wxGBPosition( 3, 1 ), wxGBSpan( 1, 1 ), wxTOP, 5 );
+
+	m_staticText32 = new wxStaticText( this, wxID_ANY, wxT("VMime: 0.9.2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText32->Wrap( -1 );
+	gbSizer1->Add( m_staticText32, wxGBPosition( 4, 1 ), wxGBSpan( 1, 1 ), wxTOP, 5 );
+
+	m_button8 = new wxButton( this, wxID_OK, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+
+	m_button8->SetDefault();
+	gbSizer1->Add( m_button8, wxGBPosition( 5, 2 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+
+
+	this->SetSizer( gbSizer1 );
+	this->Layout();
+
+	this->Centre( wxBOTH );
+}
+
+AboutDialog::~AboutDialog()
 {
 }

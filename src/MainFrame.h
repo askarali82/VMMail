@@ -39,6 +39,7 @@ protected:
     void OnDeletingThreadCompletion(wxCommandEvent& event);
     void OnMovingThreadCompletion(wxCommandEvent& event);
     void OnAccountDoubleClicked(wxDataViewEvent& event) override;
+    void OnAboutButtonClicked(wxCommandEvent& event) override;
 
 private:
     AccountFolderViewModel *m_AccountsViewModel;
