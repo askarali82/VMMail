@@ -66,6 +66,7 @@ private:
     void ExtractEmbeddedImagesDataFromPage(std::vector<HTMLInlineObject> &Objects);
     void SetEmbeddedImagesIDs(const std::vector<wxString> &ObjectIDs);
     void Extract_FROM_and_TO_Fields(Message::EmailAddress &From, std::vector<Message::EmailAddress> &To);
+    wxString ExtractFirstNameOfReceiver() const;
     void AddHeaders(vmime::messageBuilder &mb);
     void AddBody(vmime::messageBuilder &mb);
     void AddAttachments(vmime::messageBuilder &mb);

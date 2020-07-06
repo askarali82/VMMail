@@ -217,12 +217,36 @@ void EmailEditorFrame::PopulateHeaderFields()
 }
 
 
+wxString EmailEditorFrame::ExtractFirstNameOfReceiver() const
+{
+    static const wxString Hi = "Hi,<br><br>";
+    wxString Result = m_ToField->GetValue();
+    if (Result.IsEmpty())
+    {
+        return Hi;
+    }
+    Result.Trim(false).Trim();
+    const int P = Result.Find(" ");
+    if (P == wxNOT_FOUND)
+    {
+        Result = Hi;
+    }
+    else
+    {
+        Result = "Hi " + Result.Mid(0, P) + ",<br><br>";
+    }
+    return Result;
+}
+
+
 void EmailEditorFrame::SetBodyToEditor()
 {
     m_Editor->SetEditable(true);
     m_Editor->SetFocus();
+    const wxString Greeting = ExtractFirstNameOfReceiver();
     if (m_EmailType == EmailType::New)
     {
+        m_Editor->SetPage(Greeting, "");
         return;
     }
 
@@ -266,7 +290,9 @@ void EmailEditorFrame::SetBodyToEditor()
     }
 
     wxString Envelope =
-        m_EmailType == EmailType::Forward ? "<br><br>---- Forwarded Message ----<br>" : "<br><br>---- Original Message ----<br>";
+        m_EmailType == EmailType::Forward ?
+        "<br><br><br>---- Forwarded Message ----<br>" :
+        "<br><br><br>---- Original Message ----<br>";
     Envelope +=
         "<b>From:</b> " + m_Message.m_From.m_Name + " &lt;" + m_Message.m_From.m_Address + "&gt;<br>"
         "<b>Date:</b> " + m_Message.GetDateTimeStr() + "<br>" +
@@ -275,7 +301,7 @@ void EmailEditorFrame::SetBodyToEditor()
         BCcList +
         "<b>Subject:</b> " + m_Message.m_Subject + "<br><br>";
     const wxString HTML = Envelope + "<blockquote>" + m_Message.m_Body + "</blockquote>";
-    m_Editor->SetPage(HTML, "");
+    m_Editor->SetPage(Greeting + HTML, "");
 }
 
 
