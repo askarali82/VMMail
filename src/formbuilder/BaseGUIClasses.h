@@ -22,12 +22,12 @@
 #include <wx/dataview.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include <wx/menu.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
 #include <wx/splitter.h>
 #include <wx/timer.h>
-#include <wx/menu.h>
 #include <wx/frame.h>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
@@ -40,42 +40,43 @@
 
 #define ID_ADDACCOUNT_BUTTON 1000
 #define ID_WRITE_BUTTON 1001
-#define ID_REPLY_BUTTON 1002
-#define ID_REPLYALL_BUTTON 1003
-#define ID_FORWARD_BUTTON 1004
-#define ID_MOVE_BUTTON 1005
-#define ID_DELETE_BUTTON 1006
-#define ID_REFRESH_BUTTON 1007
-#define ID_ABOUT_BUTTON 1008
-#define ID_ACC_LIST 1009
-#define ID_MSG_LIST 1010
-#define ID_ATTACHES_BUTTON 1011
-#define ID_LOAD_TIMER 1012
-#define ID_TO_FIELD 1013
-#define ID_ATTACHMENTLIST 1014
-#define ID_ADDATTACHMENT 1015
-#define ID_DELETEATTACHMENT 1016
-#define ID_FONT_SELECTOR 1017
-#define ID_FONTSIZE_SELECTOR 1018
-#define ID_BOLD_BUTTON 1019
-#define ID_ITALIC_BUTTON 1020
-#define ID_UNDERLINE_BUTTON 1021
-#define ID_STRIKETHROUGH 1022
-#define ID_SUBSCRIPT 1023
-#define ID_SUPERSCRIPT 1024
-#define ID_TEXT_COLOR 1025
-#define ID_BCKG_COLOR 1026
-#define ID_CLEAR_FORMATTING 1027
-#define ID_ALIGN_LEFT 1028
-#define ID_ALIGN_CENTER 1029
-#define ID_ALIGN_RIGHT 1030
-#define ID_ALIGN_JUSTIFY 1031
-#define ID_ORDERED_LIST 1032
-#define ID_UNORDERED_LIST 1033
-#define ID_ADD_IMAGE 1034
-#define ID_INSERT_LINK 1035
-#define ID_DISCARD_BUTTON 1036
-#define ID_SEND_BUTTON 1037
+#define ID_MARK_RURBUTTON 1002
+#define ID_REPLY_BUTTON 1003
+#define ID_REPLYALL_BUTTON 1004
+#define ID_FORWARD_BUTTON 1005
+#define ID_MOVE_BUTTON 1006
+#define ID_DELETE_BUTTON 1007
+#define ID_REFRESH_BUTTON 1008
+#define ID_ABOUT_BUTTON 1009
+#define ID_ACC_LIST 1010
+#define ID_MSG_LIST 1011
+#define ID_ATTACHES_BUTTON 1012
+#define ID_LOAD_TIMER 1013
+#define ID_TO_FIELD 1014
+#define ID_ATTACHMENTLIST 1015
+#define ID_ADDATTACHMENT 1016
+#define ID_DELETEATTACHMENT 1017
+#define ID_FONT_SELECTOR 1018
+#define ID_FONTSIZE_SELECTOR 1019
+#define ID_BOLD_BUTTON 1020
+#define ID_ITALIC_BUTTON 1021
+#define ID_UNDERLINE_BUTTON 1022
+#define ID_STRIKETHROUGH 1023
+#define ID_SUBSCRIPT 1024
+#define ID_SUPERSCRIPT 1025
+#define ID_TEXT_COLOR 1026
+#define ID_BCKG_COLOR 1027
+#define ID_CLEAR_FORMATTING 1028
+#define ID_ALIGN_LEFT 1029
+#define ID_ALIGN_CENTER 1030
+#define ID_ALIGN_RIGHT 1031
+#define ID_ALIGN_JUSTIFY 1032
+#define ID_ORDERED_LIST 1033
+#define ID_UNORDERED_LIST 1034
+#define ID_ADD_IMAGE 1035
+#define ID_INSERT_LINK 1036
+#define ID_DISCARD_BUTTON 1037
+#define ID_SEND_BUTTON 1038
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class BaseMainFrame
@@ -88,6 +89,7 @@ class BaseMainFrame : public wxFrame
 		wxToolBar* m_toolBar;
 		wxToolBarToolBase* m_AddAccountToolBtn;
 		wxToolBarToolBase* m_WriteToolBtn;
+		wxToolBarToolBase* m_MarkReadUnreadToolBtn;
 		wxToolBarToolBase* m_ReplyToolBtn;
 		wxToolBarToolBase* m_ReplyAllTooBtn;
 		wxToolBarToolBase* m_ForwardToolBtn;
@@ -103,6 +105,7 @@ class BaseMainFrame : public wxFrame
 		wxSplitterWindow* m_EmaillistBodySplitterWnd;
 		wxPanel* m_EmaillistPanel;
 		wxDataViewCtrl* m_EmailListTree;
+		wxMenu* m_EmailListMenu;
 		wxPanel* m_EmailBodyPanel;
 		wxBoxSizer* m_WebViewSizer;
 		wxBoxSizer* m_HeadersSizer;
@@ -131,6 +134,7 @@ class BaseMainFrame : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnAddAccountButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnWriteButtonClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnMarkReadUnreadButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnReplyButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnReplyAllButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnForwardButtonClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -162,6 +166,11 @@ class BaseMainFrame : public wxFrame
 		{
 			m_EmaillistBodySplitterWnd->SetSashPosition( 300 );
 			m_EmaillistBodySplitterWnd->Disconnect( wxEVT_IDLE, wxIdleEventHandler( BaseMainFrame::m_EmaillistBodySplitterWndOnIdle ), NULL, this );
+		}
+
+		void m_EmaillistPanelOnContextMenu( wxMouseEvent &event )
+		{
+			m_EmaillistPanel->PopupMenu( m_EmailListMenu, event.GetPosition() );
 		}
 
 		void BaseMainFrameOnContextMenu( wxMouseEvent &event )

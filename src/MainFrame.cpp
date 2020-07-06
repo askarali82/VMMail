@@ -32,6 +32,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_DATAVIEW_SELECTION_CHANGED(ID_MSG_LIST, MainFrame::OnEmailMessageSelected)
     EVT_COMMAND(ID_ADDACCOUNT_BUTTON, wxEVT_COMMAND_TOOL_CLICKED, MainFrame::OnAddAccountButtonClicked)
     EVT_COMMAND(ID_WRITE_BUTTON, wxEVT_COMMAND_TOOL_CLICKED, MainFrame::OnWriteButtonClicked)
+    EVT_COMMAND(ID_MARK_RURBUTTON, wxEVT_COMMAND_TOOL_CLICKED, MainFrame::OnMarkReadUnreadButtonClicked)
     EVT_COMMAND(ID_REPLY_BUTTON, wxEVT_COMMAND_TOOL_CLICKED, MainFrame::OnReplyButtonClicked)
     EVT_COMMAND(ID_REPLYALL_BUTTON, wxEVT_COMMAND_TOOL_CLICKED, MainFrame::OnReplyAllButtonClicked)
     EVT_COMMAND(ID_FORWARD_BUTTON, wxEVT_COMMAND_TOOL_CLICKED, MainFrame::OnForwardButtonClicked)
@@ -43,6 +44,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_COMMAND(EmailService::ID_BODYLOADING_THREAD, wxEVT_THREAD, MainFrame::OnBodyLoadingThreadCompletion)
     EVT_COMMAND(EmailService::ID_DELETING_THREAD, wxEVT_THREAD, MainFrame::OnDeletingThreadCompletion)
     EVT_COMMAND(EmailService::ID_MOVING_THREAD, wxEVT_THREAD, MainFrame::OnMovingThreadCompletion)
+    EVT_COMMAND(EmailService::ID_FLAGSCHANGING_THREAD, wxEVT_THREAD, MainFrame::OnFlagsChangingThreadCompletion)
     EVT_UPDATE_UI_RANGE(ID_ADDACCOUNT_BUTTON, ID_REFRESH_BUTTON, MainFrame::OnToolButtonUpdate)
     EVT_DATAVIEW_ITEM_ACTIVATED(ID_ACC_LIST, MainFrame::OnAccountDoubleClicked)
 END_EVENT_TABLE()
@@ -74,6 +76,7 @@ void MainFrame::SetBitmaps()
 {
     m_AddAccountToolBtn->SetNormalBitmap(wxICON(addaccount));
     m_WriteToolBtn->SetNormalBitmap(wxICON(write));
+    m_MarkReadUnreadToolBtn->SetNormalBitmap(wxICON(read));
     m_ReplyToolBtn->SetNormalBitmap(wxICON(reply));
     m_ReplyAllTooBtn->SetNormalBitmap(wxICON(replyall));
     m_ForwardToolBtn->SetNormalBitmap(wxICON(forward));
@@ -340,6 +343,7 @@ void MainFrame::OnFolderSelected(wxDataViewEvent& event)
     m_StatusBar->SetStatusText("Current Folder: " + FolderName, 2);
     if (!m_CurrentMessages.empty())
     {
+        StopAnimation();
         AutoSelectMessage(m_MessagesViewModel->GetFirstItem());
         return;
     }
@@ -763,6 +767,10 @@ void MainFrame::OnToolButtonUpdate(wxUpdateUIEvent& event)
     {
         event.Enable(!m_Folders.empty() && !m_CurrentUser.IsEmpty());
     }
+    else if (event.GetId() == m_MarkReadUnreadToolBtn->GetId())
+    {
+        event.Enable(m_EmailListTree->GetSelectedItemsCount() > 0);
+    }
     else if (event.GetId() == m_ReplyToolBtn->GetId())
     {
         event.Enable(m_EmailListTree->GetSelectedItemsCount() > 0);
@@ -878,4 +886,45 @@ void MainFrame::OnAboutButtonClicked(wxCommandEvent& event)
 {
     AboutDialog Dlg(NULL);
     Dlg.ShowModal();
+}
+
+
+void MainFrame::OnMarkReadUnreadButtonClicked(wxCommandEvent& event)
+{
+    m_ChangingItems.Clear();
+    m_EmailListTree->GetSelections(m_ChangingItems);
+    std::vector<std::shared_ptr<Message>> Msgs;
+    for (int i = 0; i < m_ChangingItems.GetCount(); i++)
+    {
+        if (m_ChangingItems.Item(i).IsOk())
+        {
+            Msgs.push_back(m_MessagesViewModel->FindMessageByItem(m_ChangingItems.Item(i)));
+        }
+    }
+    if (Msgs.empty())
+    {
+        return;
+    }
+    std::thread MarkReadUnreadThread(
+        &EmailService::MarkMessageReadUnread, TheApp->GetEmailService(), m_CurrentFolder, Msgs);
+    MarkReadUnreadThread.detach();
+}
+
+
+void MainFrame::OnFlagsChangingThreadCompletion(wxCommandEvent& event)
+{
+    if (!event.GetInt())
+    {
+        wxMessageBox(event.GetString(), "Error", wxICON_ERROR);
+    }
+    else
+    {
+        const wxDataViewItem CurrentItem = m_AccountListTree->GetCurrentItem();
+        Folder *CurFolder = reinterpret_cast<Folder*>(CurrentItem.GetID());
+        if (CurFolder == m_CurrentFolder.get())
+        {
+            m_MessagesViewModel->ItemsChanged(m_ChangingItems);
+        }
+    }
+    m_ChangingItems.Clear();
 }

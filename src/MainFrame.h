@@ -38,8 +38,10 @@ protected:
     void OnBodyLoadingThreadCompletion(wxCommandEvent& event);
     void OnDeletingThreadCompletion(wxCommandEvent& event);
     void OnMovingThreadCompletion(wxCommandEvent& event);
+    void OnFlagsChangingThreadCompletion(wxCommandEvent& event);
     void OnAccountDoubleClicked(wxDataViewEvent& event) override;
     void OnAboutButtonClicked(wxCommandEvent& event) override;
+    void OnMarkReadUnreadButtonClicked(wxCommandEvent& event) override;
 
 private:
     AccountFolderViewModel *m_AccountsViewModel;
@@ -55,6 +57,8 @@ private:
 
     AnimationWindow m_AnimationForm;
     wxAnimationCtrl *m_AnimationCtrl;
+
+    wxDataViewItemArray m_ChangingItems;
 
     bool m_AnimationFileLoaded;
 

@@ -173,6 +173,10 @@ struct Folder
     {
         return m_Name == Other.m_Name;
     }
+    bool MessageExists(const std::shared_ptr<Message> &Msg) const
+    {
+        return std::find(m_Messages.begin(), m_Messages.end(), Msg) != m_Messages.end();
+    }
 };
 
 
@@ -233,11 +237,12 @@ struct LoadNotificationData
 class EmailService
 {
 public:
-    static const int ID_SENDING_THREAD      = 1150;
-    static const int ID_LOADING_THREAD      = 1151;
-    static const int ID_BODYLOADING_THREAD  = 1152;
-    static const int ID_DELETING_THREAD     = 1153;
-    static const int ID_MOVING_THREAD       = 1154;
+    static const int ID_SENDING_THREAD        = 1150;
+    static const int ID_LOADING_THREAD        = 1151;
+    static const int ID_BODYLOADING_THREAD    = 1152;
+    static const int ID_DELETING_THREAD       = 1153;
+    static const int ID_MOVING_THREAD         = 1154;
+    static const int ID_FLAGSCHANGING_THREAD  = 1155;
 
     wxString GetLastErrorMessage()
     {
@@ -303,6 +308,8 @@ public:
         }
     }
 
+    bool MarkMessageReadUnread(std::shared_ptr<Folder> Fldr, const std::vector<std::shared_ptr<Message>> &Msgs);
+
     bool GetHTMLPartOfMessage(std::shared_ptr<Folder> Fldr, Message *UIMsg);
 
     bool SendVMimeMessage(const wxString &Username, shared_ptr<message> VMimeMessage);
@@ -356,5 +363,5 @@ private:
     wxString ParseBodyPart(shared_ptr<message> VMimeMessage, Message *UIMessage);
     void ParseHTMLObject(
         shared_ptr<const htmlTextPart::embeddedObject> Object, wxString &HTMLTextPart);
-    void MarkMessageAsSeen(std::shared_ptr<Folder> Fldr, Message *UIMessage, shared_ptr<net::message> IMAPMessage);
+    void MarkMessageAsSeenUnseen(std::shared_ptr<Folder> Fldr, Message *UIMessage, const bool Throw = false);
 };

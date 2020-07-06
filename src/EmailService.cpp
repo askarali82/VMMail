@@ -419,7 +419,10 @@ bool EmailService::GetHTMLPartOfMessage(std::shared_ptr<Folder> Fldr, Message *U
             shared_ptr<net::message> IMAPMessage = CurFolder->m_IMAPFolder->getMessage(UIMsg->m_Number);
             shared_ptr<message> ParsedMsg = IMAPMessage->getParsedMessage();
             UIMsg->m_Body = ParseBodyPart(ParsedMsg, UIMsg);
-            MarkMessageAsSeen(CurFolder, UIMsg, IMAPMessage);
+            if (!UIMsg->m_Seen)
+            {
+                MarkMessageAsSeenUnseen(CurFolder, UIMsg);
+            }
         }
     }
     catch (const exception &e)
@@ -440,22 +443,22 @@ bool EmailService::GetHTMLPartOfMessage(std::shared_ptr<Folder> Fldr, Message *U
 }
 
 
-void EmailService::MarkMessageAsSeen(
-    std::shared_ptr<Folder> Fldr, Message *UIMessage, shared_ptr<net::message> IMAPMessage)
+void EmailService::MarkMessageAsSeenUnseen(std::shared_ptr<Folder> Fldr, Message *UIMessage, const bool Throw)
 {
     try
     {
-        if (UIMessage->m_Seen)
-        {
-            return;
-        }
-        Fldr->m_IMAPFolder->fetchMessage(IMAPMessage, net::fetchAttributes(net::fetchAttributes::FLAGS));
-        const int Flags = IMAPMessage->getFlags();
-        Fldr->m_IMAPFolder->setMessageFlags(net::messageSet::byNumber(UIMessage->m_Number), Flags | net::message::FLAG_SEEN);
-        UIMessage->m_Seen = true;
+        Fldr->m_IMAPFolder->setMessageFlags(
+            net::messageSet::byNumber(UIMessage->m_Number),
+            net::message::FLAG_SEEN,
+            UIMessage->m_Seen ? net::message::FLAG_MODE_REMOVE : net::message::FLAG_MODE_ADD);
+        UIMessage->m_Seen = !UIMessage->m_Seen;
     }
     catch (exception &)
     {
+        if (Throw)
+        {
+            throw;
+        }
     }
 }
 
@@ -645,6 +648,40 @@ bool EmailService::DeleteMessages(std::shared_ptr<Folder> Fldr, const std::vecto
     wxCommandEvent *evt = new wxCommandEvent(wxEVT_THREAD, ID_DELETING_THREAD);
     evt->SetInt(Result);
     evt->SetString(Result ? wxString("") : "Failed to delete message(s): " + m_LastErrorMessage);
+    TheApp->GetMainFrame()->GetEventHandler()->QueueEvent(evt);
+    return Result;
+}
+
+
+bool EmailService::MarkMessageReadUnread(
+    std::shared_ptr<Folder> Fldr, const std::vector<std::shared_ptr<Message>> &Msgs)
+{
+    wxCriticalSectionLocker Locker(m_CritSect);
+    try
+    {
+        m_LastErrorMessage.Clear();
+        CheckError(!Msgs.empty(), "No message to mark read/unread.");
+        std::shared_ptr<Folder> CurFolder = FindFolder(Fldr->m_Parent->m_Name, Fldr->m_Name);
+        for (const auto &M : Msgs)
+        {
+            if (CurFolder->MessageExists(M))
+            {
+                MarkMessageAsSeenUnseen(CurFolder, M.get(), true);
+            }
+        }
+    }
+    catch (const exception &e)
+    {
+        m_LastErrorMessage = e.what();
+    }
+    catch (const std::exception &e)
+    {
+        m_LastErrorMessage = e.what();
+    }
+    const bool Result = m_LastErrorMessage.IsEmpty();
+    wxCommandEvent *evt = new wxCommandEvent(wxEVT_THREAD, ID_FLAGSCHANGING_THREAD);
+    evt->SetInt(Result);
+    evt->SetString(Result ? wxString("") : "Cannot mark message(s) Read/Unread: " + m_LastErrorMessage);
     TheApp->GetMainFrame()->GetEventHandler()->QueueEvent(evt);
     return Result;
 }

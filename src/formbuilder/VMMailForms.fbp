@@ -27,7 +27,7 @@
         <property name="ui_table">UI</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="0">
+        <object class="Frame" expanded="1">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -139,6 +139,18 @@
                 </object>
                 <object class="toolSeparator" expanded="0">
                     <property name="permission">protected</property>
+                </object>
+                <object class="tool" expanded="1">
+                    <property name="bitmap">Load From File; ../bitmaps/read.xpm</property>
+                    <property name="context_menu">0</property>
+                    <property name="id">ID_MARK_RURBUTTON</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Mark Read/Unread</property>
+                    <property name="name">m_MarkReadUnreadToolBtn</property>
+                    <property name="permission">protected</property>
+                    <property name="statusbar"></property>
+                    <property name="tooltip">Mark Read/Unread</property>
+                    <event name="OnToolClicked">OnMarkReadUnreadButtonClicked</event>
                 </object>
                 <object class="tool" expanded="0">
                     <property name="bitmap">Load From File; ../bitmaps/reply.xpm</property>
@@ -257,16 +269,16 @@
                 <property name="window_name"></property>
                 <property name="window_style"></property>
             </object>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxSplitterWindow" expanded="0">
+                    <object class="wxSplitterWindow" expanded="1">
                         <property name="BottomDockable">1</property>
                         <property name="LeftDockable">1</property>
                         <property name="RightDockable">1</property>
@@ -412,8 +424,8 @@
                                 </object>
                             </object>
                         </object>
-                        <object class="splitteritem" expanded="0">
-                            <object class="wxPanel" expanded="0">
+                        <object class="splitteritem" expanded="1">
+                            <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>
@@ -464,16 +476,16 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style">wxTAB_TRAVERSAL</property>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bEmailsSizer</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">1</property>
-                                        <object class="wxSplitterWindow" expanded="0">
+                                        <object class="wxSplitterWindow" expanded="1">
                                             <property name="BottomDockable">1</property>
                                             <property name="LeftDockable">1</property>
                                             <property name="RightDockable">1</property>
@@ -530,8 +542,8 @@
                                             <property name="window_extra_style"></property>
                                             <property name="window_name"></property>
                                             <property name="window_style"></property>
-                                            <object class="splitteritem" expanded="0">
-                                                <object class="wxPanel" expanded="0">
+                                            <object class="splitteritem" expanded="1">
+                                                <object class="wxPanel" expanded="1">
                                                     <property name="BottomDockable">1</property>
                                                     <property name="LeftDockable">1</property>
                                                     <property name="RightDockable">1</property>
@@ -614,6 +626,93 @@
                                                                 <property name="window_style"></property>
                                                                 <event name="OnDataViewCtrlSelectionChanged">OnEmailMessageSelected</event>
                                                             </object>
+                                                        </object>
+                                                    </object>
+                                                    <object class="wxMenu" expanded="1">
+                                                        <property name="label">MyMenu</property>
+                                                        <property name="name">m_EmailListMenu</property>
+                                                        <property name="permission">protected</property>
+                                                        <object class="wxMenuItem" expanded="0">
+                                                            <property name="bitmap"></property>
+                                                            <property name="checked">0</property>
+                                                            <property name="enabled">1</property>
+                                                            <property name="help"></property>
+                                                            <property name="id">wxID_ANY</property>
+                                                            <property name="kind">wxITEM_NORMAL</property>
+                                                            <property name="label">Mark Read/Unread</property>
+                                                            <property name="name">m_MarkRUnRMenuItem</property>
+                                                            <property name="permission">none</property>
+                                                            <property name="shortcut"></property>
+                                                            <property name="unchecked_bitmap"></property>
+                                                        </object>
+                                                        <object class="wxMenuItem" expanded="0">
+                                                            <property name="bitmap"></property>
+                                                            <property name="checked">0</property>
+                                                            <property name="enabled">1</property>
+                                                            <property name="help"></property>
+                                                            <property name="id">wxID_ANY</property>
+                                                            <property name="kind">wxITEM_NORMAL</property>
+                                                            <property name="label">Reply</property>
+                                                            <property name="name">m_ReplyMenuItem</property>
+                                                            <property name="permission">none</property>
+                                                            <property name="shortcut"></property>
+                                                            <property name="unchecked_bitmap"></property>
+                                                        </object>
+                                                        <object class="wxMenuItem" expanded="0">
+                                                            <property name="bitmap"></property>
+                                                            <property name="checked">0</property>
+                                                            <property name="enabled">1</property>
+                                                            <property name="help"></property>
+                                                            <property name="id">wxID_ANY</property>
+                                                            <property name="kind">wxITEM_NORMAL</property>
+                                                            <property name="label">Reply All</property>
+                                                            <property name="name">m_ReplyAllMenuItem</property>
+                                                            <property name="permission">none</property>
+                                                            <property name="shortcut"></property>
+                                                            <property name="unchecked_bitmap"></property>
+                                                        </object>
+                                                        <object class="wxMenuItem" expanded="0">
+                                                            <property name="bitmap"></property>
+                                                            <property name="checked">0</property>
+                                                            <property name="enabled">1</property>
+                                                            <property name="help"></property>
+                                                            <property name="id">wxID_ANY</property>
+                                                            <property name="kind">wxITEM_NORMAL</property>
+                                                            <property name="label">Forward</property>
+                                                            <property name="name">m_ForwardMenuItem</property>
+                                                            <property name="permission">none</property>
+                                                            <property name="shortcut"></property>
+                                                            <property name="unchecked_bitmap"></property>
+                                                        </object>
+                                                        <object class="separator" expanded="0">
+                                                            <property name="name">m_separator1</property>
+                                                            <property name="permission">none</property>
+                                                        </object>
+                                                        <object class="wxMenuItem" expanded="0">
+                                                            <property name="bitmap"></property>
+                                                            <property name="checked">0</property>
+                                                            <property name="enabled">1</property>
+                                                            <property name="help"></property>
+                                                            <property name="id">wxID_ANY</property>
+                                                            <property name="kind">wxITEM_NORMAL</property>
+                                                            <property name="label">Move</property>
+                                                            <property name="name">m_MoveMenuItem</property>
+                                                            <property name="permission">none</property>
+                                                            <property name="shortcut"></property>
+                                                            <property name="unchecked_bitmap"></property>
+                                                        </object>
+                                                        <object class="wxMenuItem" expanded="0">
+                                                            <property name="bitmap"></property>
+                                                            <property name="checked">0</property>
+                                                            <property name="enabled">1</property>
+                                                            <property name="help"></property>
+                                                            <property name="id">wxID_ANY</property>
+                                                            <property name="kind">wxITEM_NORMAL</property>
+                                                            <property name="label">Delete</property>
+                                                            <property name="name">m_DeleteMenuItem</property>
+                                                            <property name="permission">none</property>
+                                                            <property name="shortcut"></property>
+                                                            <property name="unchecked_bitmap"></property>
                                                         </object>
                                                     </object>
                                                 </object>

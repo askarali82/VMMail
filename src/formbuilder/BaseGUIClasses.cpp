@@ -27,6 +27,7 @@
 #include "../bitmaps/mms.xpm"
 #include "../bitmaps/move.xpm"
 #include "../bitmaps/ordered.xpm"
+#include "../bitmaps/read.xpm"
 #include "../bitmaps/refresh.xpm"
 #include "../bitmaps/reply.xpm"
 #include "../bitmaps/replyall.xpm"
@@ -53,6 +54,8 @@ BaseMainFrame::BaseMainFrame( wxWindow* parent, wxWindowID id, const wxString& t
 	m_WriteToolBtn = m_toolBar->AddTool( ID_WRITE_BUTTON, wxT("New Mail"), wxBitmap( write_xpm ), wxNullBitmap, wxITEM_NORMAL, wxT("Write New Message"), wxEmptyString, NULL );
 
 	m_toolBar->AddSeparator();
+
+	m_MarkReadUnreadToolBtn = m_toolBar->AddTool( ID_MARK_RURBUTTON, wxT("Mark Read/Unread"), wxBitmap( read_xpm ), wxNullBitmap, wxITEM_NORMAL, wxT("Mark Read/Unread"), wxEmptyString, NULL );
 
 	m_ReplyToolBtn = m_toolBar->AddTool( ID_REPLY_BUTTON, wxT("Reply"), wxBitmap( reply_xpm ), wxNullBitmap, wxITEM_NORMAL, wxT("Reply To Sender"), wxEmptyString, NULL );
 
@@ -118,6 +121,35 @@ BaseMainFrame::BaseMainFrame( wxWindow* parent, wxWindowID id, const wxString& t
 	m_EmaillistPanel->SetSizer( bSizer5 );
 	m_EmaillistPanel->Layout();
 	bSizer5->Fit( m_EmaillistPanel );
+	m_EmailListMenu = new wxMenu();
+	wxMenuItem* m_MarkRUnRMenuItem;
+	m_MarkRUnRMenuItem = new wxMenuItem( m_EmailListMenu, wxID_ANY, wxString( wxT("Mark Read/Unread") ) , wxEmptyString, wxITEM_NORMAL );
+	m_EmailListMenu->Append( m_MarkRUnRMenuItem );
+
+	wxMenuItem* m_ReplyMenuItem;
+	m_ReplyMenuItem = new wxMenuItem( m_EmailListMenu, wxID_ANY, wxString( wxT("Reply") ) , wxEmptyString, wxITEM_NORMAL );
+	m_EmailListMenu->Append( m_ReplyMenuItem );
+
+	wxMenuItem* m_ReplyAllMenuItem;
+	m_ReplyAllMenuItem = new wxMenuItem( m_EmailListMenu, wxID_ANY, wxString( wxT("Reply All") ) , wxEmptyString, wxITEM_NORMAL );
+	m_EmailListMenu->Append( m_ReplyAllMenuItem );
+
+	wxMenuItem* m_ForwardMenuItem;
+	m_ForwardMenuItem = new wxMenuItem( m_EmailListMenu, wxID_ANY, wxString( wxT("Forward") ) , wxEmptyString, wxITEM_NORMAL );
+	m_EmailListMenu->Append( m_ForwardMenuItem );
+
+	m_EmailListMenu->AppendSeparator();
+
+	wxMenuItem* m_MoveMenuItem;
+	m_MoveMenuItem = new wxMenuItem( m_EmailListMenu, wxID_ANY, wxString( wxT("Move") ) , wxEmptyString, wxITEM_NORMAL );
+	m_EmailListMenu->Append( m_MoveMenuItem );
+
+	wxMenuItem* m_DeleteMenuItem;
+	m_DeleteMenuItem = new wxMenuItem( m_EmailListMenu, wxID_ANY, wxString( wxT("Delete") ) , wxEmptyString, wxITEM_NORMAL );
+	m_EmailListMenu->Append( m_DeleteMenuItem );
+
+	m_EmaillistPanel->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( BaseMainFrame::m_EmaillistPanelOnContextMenu ), NULL, this );
+
 	m_EmailBodyPanel = new wxPanel( m_EmaillistBodySplitterWnd, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_WebViewSizer = new wxBoxSizer( wxVERTICAL );
 
@@ -252,6 +284,7 @@ BaseMainFrame::BaseMainFrame( wxWindow* parent, wxWindowID id, const wxString& t
 	// Connect Events
 	this->Connect( m_AddAccountToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnAddAccountButtonClicked ) );
 	this->Connect( m_WriteToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnWriteButtonClicked ) );
+	this->Connect( m_MarkReadUnreadToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnMarkReadUnreadButtonClicked ) );
 	this->Connect( m_ReplyToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnReplyButtonClicked ) );
 	this->Connect( m_ReplyAllTooBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnReplyAllButtonClicked ) );
 	this->Connect( m_ForwardToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnForwardButtonClicked ) );
@@ -272,6 +305,7 @@ BaseMainFrame::~BaseMainFrame()
 	// Disconnect Events
 	this->Disconnect( m_AddAccountToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnAddAccountButtonClicked ) );
 	this->Disconnect( m_WriteToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnWriteButtonClicked ) );
+	this->Disconnect( m_MarkReadUnreadToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnMarkReadUnreadButtonClicked ) );
 	this->Disconnect( m_ReplyToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnReplyButtonClicked ) );
 	this->Disconnect( m_ReplyAllTooBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnReplyAllButtonClicked ) );
 	this->Disconnect( m_ForwardToolBtn->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseMainFrame::OnForwardButtonClicked ) );
@@ -286,6 +320,7 @@ BaseMainFrame::~BaseMainFrame()
 	m_AttachmentsButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseMainFrame::OnAttachmentsClicked ), NULL, this );
 	this->Disconnect( ID_LOAD_TIMER, wxEVT_TIMER, wxTimerEventHandler( BaseMainFrame::OnLoadingTimer ) );
 
+	delete m_EmailListMenu;
 	delete m_AttachmentsBtnMenu;
 }
 
