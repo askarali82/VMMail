@@ -242,11 +242,10 @@ wxString EmailEditorFrame::ExtractFirstNameOfReceiver() const
 void EmailEditorFrame::SetBodyToEditor()
 {
     m_Editor->SetEditable(true);
-    m_Editor->SetFocus();
     const wxString Greeting = ExtractFirstNameOfReceiver();
     if (m_EmailType == EmailType::New)
     {
-        m_Editor->SetPage(Greeting, "");
+        m_Editor->SetPage("<div style=\"font-family:Microsoft Sans Serif;font-size:14px;\">" + Greeting + "</div>", "");
         return;
     }
 
@@ -300,8 +299,10 @@ void EmailEditorFrame::SetBodyToEditor()
         CcList + 
         BCcList +
         "<b>Subject:</b> " + m_Message.m_Subject + "<br><br>";
-    const wxString HTML = Envelope + "<blockquote>" + m_Message.m_Body + "</blockquote>";
-    m_Editor->SetPage(Greeting + HTML, "");
+    const wxString HTML =
+        "<div style=\"font-family:Microsoft Sans Serif;font-size:14px;\">" + Greeting + Envelope + "</div>"
+        "<blockquote>" + m_Message.m_Body + "</blockquote>";
+    m_Editor->SetPage(HTML, "");
 }
 
 
