@@ -884,8 +884,14 @@ void MainFrame::OnMoveButtonClicked(wxCommandEvent& event)
 
 void MainFrame::OnAboutButtonClicked(wxCommandEvent& event)
 {
-    AboutDialog Dlg(NULL);
-    Dlg.ShowModal();
+    const wxString About =
+        wxT("VMMail v1.0\n\n") \
+        wxT("An Open Source Mail User Agent\n") \
+        wxT("Developed by: Askarali Azimov\n") \
+        wxT("wxWidgets: 3.1.3\n") \
+        wxT("VMime: 0.9.2\n") \
+        wxT("Tool button icons: https://icons8.com\n");
+    wxMessageBox(About, wxT("About..."), wxOK | wxCENTRE | wxICON_INFORMATION, this);
 }
 
 

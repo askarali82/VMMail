@@ -33,8 +33,6 @@
 #include <wx/dialog.h>
 #include <wx/listbox.h>
 #include <wx/choice.h>
-#include <wx/statbmp.h>
-#include <wx/gbsizer.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -321,29 +319,6 @@ class AnimationWindow : public wxDialog
 
 		AnimationWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 32,32 ), long style = wxSTAY_ON_TOP );
 		~AnimationWindow();
-
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class AboutDialog
-///////////////////////////////////////////////////////////////////////////////
-class AboutDialog : public wxDialog
-{
-	private:
-
-	protected:
-		wxStaticBitmap* m_bitmap3;
-		wxStaticText* m_staticText29;
-		wxStaticText* m_staticText30;
-		wxStaticText* m_staticText33;
-		wxStaticText* m_staticText31;
-		wxStaticText* m_staticText32;
-		wxButton* m_button8;
-
-	public:
-
-		AboutDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 353,206 ), long style = wxDEFAULT_DIALOG_STYLE );
-		~AboutDialog();
 
 };
 
