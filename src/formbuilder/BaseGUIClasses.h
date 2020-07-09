@@ -305,20 +305,3 @@ class BaseEmailEditorFrame : public wxFrame
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class AnimationWindow
-///////////////////////////////////////////////////////////////////////////////
-class AnimationWindow : public wxDialog
-{
-	private:
-
-	protected:
-
-	public:
-		wxBoxSizer* m_Sizer;
-
-		AnimationWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 32,32 ), long style = wxSTAY_ON_TOP );
-		~AnimationWindow();
-
-};
-

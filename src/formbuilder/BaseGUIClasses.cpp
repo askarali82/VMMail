@@ -734,21 +734,3 @@ BaseEmailEditorFrame::~BaseEmailEditorFrame()
 	m_SendButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnSendButtonClicked ), NULL, this );
 
 }
-
-AnimationWindow::AnimationWindow( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxSize( 32,32 ), wxSize( 32,32 ) );
-
-	m_Sizer = new wxBoxSizer( wxVERTICAL );
-
-	m_Sizer->SetMinSize( wxSize( 32,32 ) );
-
-	this->SetSizer( m_Sizer );
-	this->Layout();
-
-	this->Centre( wxBOTH );
-}
-
-AnimationWindow::~AnimationWindow()
-{
-}

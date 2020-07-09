@@ -52,8 +52,7 @@ END_EVENT_TABLE()
 
 MainFrame::MainFrame() :
     BaseMainFrame(nullptr), m_AccountsViewModel(nullptr), m_MessagesViewModel(nullptr),
-    m_Browser(wxWebView::New(m_EmailBodyPanel, wxID_ANY, wxWebViewDefaultURLStr)),
-    m_AnimationForm(NULL),  m_AnimationCtrl(new wxAnimationCtrl(&m_AnimationForm, wxID_ANY))
+    m_Browser(wxWebView::New(m_EmailBodyPanel, wxID_ANY, wxWebViewDefaultURLStr))
 {
     SetIcon(wxICON(email));
 #ifdef __WXMSW__
@@ -63,10 +62,8 @@ MainFrame::MainFrame() :
     AddColumnsToMessageList();
     m_WebViewSizer->Add(m_Browser, wxSizerFlags().Expand().Proportion(1));
     m_WebViewSizer->Fit(m_EmailBodyPanel);
-    const int Widths[] = {100, 400, 300, 300};
+    const int Widths[] = {200, 400, 300, 300};
     m_StatusBar->SetFieldsCount(4, Widths);
-    m_AnimationForm.m_Sizer->Add(m_AnimationCtrl, wxSizerFlags().Expand());
-    m_AnimationFileLoaded = m_AnimationCtrl->LoadFile("throbber.gif");
     SetHeaderFieldsFromMessage(Message());
 }
 
@@ -800,29 +797,16 @@ void MainFrame::OnToolButtonUpdate(wxUpdateUIEvent& event)
 
 void MainFrame::PlayAnimation()
 {
-    if (!m_AnimationFileLoaded)
-    {
-        return;
-    }
-    m_AnimationForm.m_Sizer->Fit(&m_AnimationForm);
-    m_AnimationForm.Fit();
-    const wxSize AS = m_AnimationForm.GetSize();
-    const wxSize BS = m_Browser->GetSize();
-    wxPoint P((BS.GetWidth() - AS.GetWidth()) / 2, (BS.GetHeight() - AS.GetHeight()) / 2);
-    m_Browser->ClientToScreen(&P.x, &P.y);
-    m_AnimationForm.SetPosition(P);
-    m_AnimationForm.Show(true);
-    m_AnimationCtrl->Play();
+    m_Browser->SetPage(
+        "<div style=\"text-align:center;line-height:100%;width:100%;"
+        "height:100%;font-size:20px;\"><br><br><br><br>Loading...</div>", "");
+    // I may implement/add an animation in future
 }
 
 
 void MainFrame::StopAnimation()
 {
-    if (m_AnimationFileLoaded)
-    {
-        m_AnimationCtrl->Stop();
-        m_AnimationForm.Show(false);
-    }
+    // I may implement/add an animation in future
 }
 
 

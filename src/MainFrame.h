@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <wx/animate.h>
+#include <wx/activityindicator.h>
 
 class AccountFolderViewModel;
 class MessageListViewModel;
@@ -55,12 +56,7 @@ private:
     std::vector<std::shared_ptr<Message>> m_CurrentMessages;
     std::vector<std::shared_ptr<Message>> m_MessagesToBeMoved;
 
-    AnimationWindow m_AnimationForm;
-    wxAnimationCtrl *m_AnimationCtrl;
-
     wxDataViewItemArray m_ChangingItems;
-
-    bool m_AnimationFileLoaded;
 
     void MoveMessages(std::shared_ptr<Folder> Source, std::shared_ptr<Folder> Dest);
 
