@@ -13,7 +13,8 @@
 #include <fstream>
 #include <functional>
 #include "EmailEditorFrame.h"
-
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
 #ifdef WIN32
     #include "mingw-std-threads/mingw.thread.h"
 #else
@@ -797,16 +798,35 @@ void MainFrame::OnToolButtonUpdate(wxUpdateUIEvent& event)
 
 void MainFrame::PlayAnimation()
 {
-    m_Browser->SetPage(
-        "<div style=\"text-align:center;line-height:100%;width:100%;"
-        "height:100%;font-size:20px;\"><br><br><br><br>Loading...</div>", "");
-    // I may implement/add an animation in future
+    wxFileName ExecPath(wxStandardPaths::Get().GetExecutablePath());
+    ExecPath.SetExt("gif");
+    ExecPath.SetName("throbber");
+    const wxString HTML = ExecPath.FileExists()
+        ?
+        "<html>"
+        "<head>"
+        "<style> img{display: block; margin-left: auto; margin-right: auto; padding: 50px} </style>"
+        "</head>"
+        "<body>"
+        "<img src=\"file://" + ExecPath.GetFullPath() + "\">"
+        "</body>"
+        "</html>"
+        :
+        "<html>"
+        "<body>"
+        "<div style=\"text-align:center; line-height:100%; width:100%; height:100%; font-size:20px;\"><br>"
+        "<br><br><br>"
+        "Loading..."
+        "</div>"
+        "</body>"
+        "</html>";
+    m_Browser->SetPage(HTML, (ExecPath.FileExists() ? "file://" + ExecPath.GetPath() : wxString()));
 }
 
 
 void MainFrame::StopAnimation()
 {
-    // I may implement/add an animation in future
+    m_Browser->SetPage("", "");
 }
 
 
