@@ -826,7 +826,7 @@ void MainFrame::PlayAnimation()
 
 void MainFrame::StopAnimation()
 {
-    m_Browser->SetPage("", "");
+    m_Browser->SetPage("<html><body></body></html>", "");
 }
 
 
