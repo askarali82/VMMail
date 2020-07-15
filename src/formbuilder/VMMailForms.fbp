@@ -1828,11 +1828,6 @@
                 <property name="permission">protected</property>
                 <event name="OnTimer">OnLoadingTimer</event>
             </object>
-            <object class="wxMenu" expanded="0">
-                <property name="label"></property>
-                <property name="name">m_AttachmentsBtnMenu</property>
-                <property name="permission">protected</property>
-            </object>
         </object>
         <object class="Dialog" expanded="0">
             <property name="aui_managed">0</property>

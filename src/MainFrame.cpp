@@ -697,16 +697,15 @@ void MainFrame::SetHeaderFieldsFromMessage(const Message &Msg)
 
 void MainFrame::PopulateAttachmentsMenu(const std::vector<Message::Attachment> &Attachments)
 {
-    for (size_t i = 0; i < m_AttachmentsBtnMenu->GetMenuItemCount(); i++)
+    if (Attachments.empty())
     {
-        wxMenuItem *MI = m_AttachmentsBtnMenu->FindItemByPosition(i);
-        m_AttachmentsBtnMenu->Delete(MI);
+        return;
     }
-    m_AttachmentsBtnMenu->GetMenuItems().Clear();
+    m_AttachmentsBtnMenu.reset(new wxMenu());
     for (auto &Attachment : Attachments)
     {
 	    wxMenuItem* MenuItem = new wxMenuItem(
-            m_AttachmentsBtnMenu,
+            m_AttachmentsBtnMenu.get(),
             ID_MENU_ITEMS,
             (Attachment.m_Name.IsEmpty() ? wxString("No Name") : Attachment.m_Name),
             wxEmptyString,
@@ -746,7 +745,7 @@ void MainFrame::OnAttachmentsClicked(wxCommandEvent& event)
 {
     wxPoint P = m_AttachmentsButton->GetPosition();
     P.y += m_AttachmentsButton->GetSize().GetHeight();
-    m_FromPanel->PopupMenu(m_AttachmentsBtnMenu, P);
+    m_FromPanel->PopupMenu(m_AttachmentsBtnMenu.get(), P);
 }
 
 

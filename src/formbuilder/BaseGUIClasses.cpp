@@ -274,9 +274,6 @@ BaseMainFrame::BaseMainFrame( wxWindow* parent, wxWindowID id, const wxString& t
 	this->SetSizer( bSizer );
 	this->Layout();
 	m_LoadingTimer.SetOwner( this, ID_LOAD_TIMER );
-	m_AttachmentsBtnMenu = new wxMenu();
-	this->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( BaseMainFrame::BaseMainFrameOnContextMenu ), NULL, this );
-
 
 	this->Centre( wxBOTH );
 
@@ -320,7 +317,6 @@ BaseMainFrame::~BaseMainFrame()
 	this->Disconnect( ID_LOAD_TIMER, wxEVT_TIMER, wxTimerEventHandler( BaseMainFrame::OnLoadingTimer ) );
 
 	delete m_EmailListMenu;
-	delete m_AttachmentsBtnMenu;
 }
 
 BaseAccountConfigDialog::BaseAccountConfigDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )

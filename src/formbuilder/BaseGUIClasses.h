@@ -127,7 +127,6 @@ class BaseMainFrame : public wxFrame
 		wxStaticText* m_BCCFieldLabel;
 		wxTextCtrl* m_BCCField;
 		wxTimer m_LoadingTimer;
-		wxMenu* m_AttachmentsBtnMenu;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnAddAccountButtonClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -169,11 +168,6 @@ class BaseMainFrame : public wxFrame
 		void m_EmaillistPanelOnContextMenu( wxMouseEvent &event )
 		{
 			m_EmaillistPanel->PopupMenu( m_EmailListMenu, event.GetPosition() );
-		}
-
-		void BaseMainFrameOnContextMenu( wxMouseEvent &event )
-		{
-			this->PopupMenu( m_AttachmentsBtnMenu, event.GetPosition() );
 		}
 
 };

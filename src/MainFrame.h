@@ -48,6 +48,7 @@ private:
     AccountFolderViewModel *m_AccountsViewModel;
     MessageListViewModel *m_MessagesViewModel;
     wxWebView *m_Browser;
+    std::unique_ptr<wxMenu> m_AttachmentsBtnMenu;
 
     wxString m_CurrentUser;
     std::shared_ptr<Folder> m_CurrentFolder;
