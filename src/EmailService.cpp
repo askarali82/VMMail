@@ -531,6 +531,7 @@ void EmailService::ParseHTMLObject(
             utility::outputStreamStringAdapter oss(str);
             utility::encoder::b64Encoder b64;
             b64.encode(isb, oss);
+            SplitBase64StdString(str);
             const wxString NewStr =
                 "data:" + Object->getType().getType() + "/" +
                 Object->getType().getSubType() + ";" + Object->getEncoding().getName() + "," + str;
@@ -684,4 +685,18 @@ bool EmailService::MarkMessageReadUnread(
     evt->SetString(Result ? wxString("") : "Cannot mark message(s) Read/Unread: " + m_LastErrorMessage);
     TheApp->GetMainFrame()->GetEventHandler()->QueueEvent(evt);
     return Result;
+}
+
+
+void EmailService::SplitBase64StdString(std::string &Str) const
+{
+    size_t I = 0;
+    for (size_t i = I; i < Str.length(); i++)
+    {
+        if (i > 0 && (i % 75) == 0)
+        {
+            Str.insert(i, "\n");
+            I + i + 1;
+        }
+    }
 }

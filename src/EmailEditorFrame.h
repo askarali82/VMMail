@@ -83,6 +83,7 @@ private:
     void AddBody(vmime::messageBuilder &mb);
     void AddAttachments(vmime::messageBuilder &mb);
     void OnAddressSelected(const wxString &Address);
+    void SplitBase64wxString(wxString &Str) const;
     
 #ifdef __WXMSW__
     void SetBitmaps();

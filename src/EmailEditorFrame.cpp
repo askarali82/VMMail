@@ -414,6 +414,20 @@ void EmailEditorFrame::OnClearFormatButtonClicked(wxCommandEvent& event)
 }
 
 
+void EmailEditorFrame::SplitBase64wxString(wxString &Str) const
+{
+    size_t I = 0;
+    for (size_t i = I; i < Str.Length(); i++)
+    {
+        if (i > 0 && (i % 75) == 0)
+        {
+            Str.insert(i, "\n");
+            I + i + 1;
+        }
+    }
+}
+
+
 void EmailEditorFrame::OnAddImageButtonClicked( wxCommandEvent& event )
 {
     wxFileDialog OpenFileDlg(
@@ -433,8 +447,9 @@ void EmailEditorFrame::OnAddImageButtonClicked( wxCommandEvent& event )
     std::vector<std::byte> Data(FSize, std::byte(0));
     File.read(reinterpret_cast<char*>(Data.data()), Data.size());
     const wxFileName FileName(OpenFileDlg.GetPath());
-    const wxString ImageStr =
-        "<img src=\"data:image/" + FileName.GetExt() + ";base64," + wxBase64Encode(Data.data(), Data.size()) + "\"/>";
+    wxString ImageStr = wxBase64Encode(Data.data(), Data.size());
+    SplitBase64wxString(ImageStr);
+    ImageStr = "<img src=\"data:image/" + FileName.GetExt() + ";base64," + ImageStr + "\"/>";
     bool Inserted = false;
     if (wxTheClipboard->Open())
     {
@@ -518,6 +533,7 @@ void EmailEditorFrame::ExtractEmbeddedImagesDataFromPage(std::vector<HTMLInlineO
             {
                 Obj.Data = Parts[3];
                 Obj.Data.Trim(false).Trim();
+                SplitBase64wxString(Obj.Data);
             }
             if (Obj.IsValid())
             {
@@ -567,6 +583,10 @@ void EmailEditorFrame::AddHeaders(vmime::messageBuilder &mb)
     const wxArrayString Tos = wxSplit(m_ToField->GetValue(), ';');
     for (size_t i = 0; i < Tos.GetCount(); i++)
     {
+        if (Tos.Item(i).IsEmpty())
+        {
+            continue;
+        }
         Message::EmailAddress To(Tos.Item(i));
         mb.getRecipients().appendAddress(
             vmime::make_shared<vmime::mailbox>(vmime::text(To.m_Name.ToUTF8().data(), ChS), To.m_Address.ToStdString()));
@@ -574,6 +594,10 @@ void EmailEditorFrame::AddHeaders(vmime::messageBuilder &mb)
     const wxArrayString Ccs = wxSplit(m_CCField->GetValue(), ';');
     for (size_t i = 0; i < Ccs.GetCount(); i++)
     {
+        if (Ccs.Item(i).IsEmpty())
+        {
+            continue;
+        }
         Message::EmailAddress To(Ccs.Item(i));
         mb.getCopyRecipients().appendAddress(
             vmime::make_shared<vmime::mailbox>(vmime::text(To.m_Name.ToUTF8().data(), ChS), To.m_Address.ToStdString()));
@@ -581,6 +605,10 @@ void EmailEditorFrame::AddHeaders(vmime::messageBuilder &mb)
     const wxArrayString BCcs = wxSplit(m_BCCField->GetValue(), ';');
     for (size_t i = 0; i < BCcs.GetCount(); i++)
     {
+        if (BCcs.Item(i).IsEmpty())
+        {
+            continue;
+        }
         Message::EmailAddress To(BCcs.Item(i));
         mb.getBlindCopyRecipients().appendAddress(
             vmime::make_shared<vmime::mailbox>(vmime::text(To.m_Name.ToUTF8().data(), ChS), To.m_Address.ToStdString()));

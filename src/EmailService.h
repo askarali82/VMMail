@@ -380,4 +380,6 @@ private:
     void ParseHTMLObject(
         shared_ptr<const htmlTextPart::embeddedObject> Object, wxString &HTMLTextPart);
     void MarkMessageAsSeenUnseen(std::shared_ptr<Folder> Fldr, Message *UIMessage, const bool Throw = false);
+
+    void SplitBase64StdString(std::string &Str) const;
 };
