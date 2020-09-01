@@ -210,9 +210,51 @@ void MainFrame::PopulateMessageList()
     else
     {
         m_CurrentMessages = m_CurrentFolder->m_Messages;
+        CollectEmailAddresses();
     }
     m_StatusBar->SetStatusText(std::to_string(m_CurrentMessages.size()) + " messages");
     m_MessagesViewModel->Cleared();
+}
+
+
+void MainFrame::CollectEmailAddresses(const Message::EmailAddress &Address)
+{
+    if (!Address.m_Address.IsEmpty())
+    {
+        if (std::find(EmailAddresses.begin(), EmailAddresses.end(), Address) == EmailAddresses.end())
+        {
+            EmailAddresses.push_back(Address);
+        }
+    }
+    for (const auto &M : m_CurrentMessages)
+    {
+        if (std::find(EmailAddresses.begin(), EmailAddresses.end(), M->m_From) == EmailAddresses.end())
+        {
+            EmailAddresses.push_back(M->m_From);
+        }
+        for (const auto &To : M->m_To)
+        {
+            if (std::find(EmailAddresses.begin(), EmailAddresses.end(), To) == EmailAddresses.end())
+            {
+                EmailAddresses.push_back(To);
+            }
+        }
+        for (const auto &Cc : M->m_Cc)
+        {
+            if (std::find(EmailAddresses.begin(), EmailAddresses.end(), Cc) == EmailAddresses.end())
+            {
+                EmailAddresses.push_back(Cc);
+            }
+        }
+        for (const auto &BCc : M->m_BCc)
+        {
+            if (std::find(EmailAddresses.begin(), EmailAddresses.end(), BCc) == EmailAddresses.end())
+            {
+                EmailAddresses.push_back(BCc);
+            }
+        }
+    }
+    std::sort(EmailAddresses.begin(), EmailAddresses.end());
 }
 
 
@@ -333,6 +375,7 @@ void MainFrame::OnFolderSelected(wxDataViewEvent& event)
     {
         m_CurrentMessages = m_CurrentFolder->m_Messages;
         FolderName = m_CurrentFolder->m_Name;
+        CollectEmailAddresses();
     }
     m_MessagesViewModel->Cleared();
     SetHeaderFieldsFromMessage(Message());
@@ -389,6 +432,7 @@ void MainFrame::MoveMessages(std::shared_ptr<Folder> Source, std::shared_ptr<Fol
         [](std::shared_ptr<Message> a, std::shared_ptr<Message> b) {return a->m_Date > b->m_Date;});
     TheApp->GetEmailService()->ResetMessagesPartners(Dest->m_Messages);
     m_CurrentMessages = Source->m_Messages;
+    CollectEmailAddresses();
     m_MessagesViewModel->Cleared();
     std::thread MovingThread(&EmailService::MoveMessages, TheApp->GetEmailService(), Source, Dest, m_MessagesToBeMoved);
     MovingThread.detach();
@@ -543,6 +587,7 @@ void MainFrame::OnDeleteButtonClicked(wxCommandEvent& event)
     }
     TheApp->GetEmailService()->ResetMessagesPartners(m_CurrentFolder->m_Messages);
     m_CurrentMessages = m_CurrentFolder->m_Messages;
+    CollectEmailAddresses();
     m_MessagesViewModel->Cleared();
     m_StatusBar->SetStatusText(std::to_string(m_CurrentMessages.size()) + " messages");
     const wxDataViewItem Item = Msgs[0]->m_Prev != nullptr ?
@@ -888,7 +933,7 @@ void MainFrame::OnMoveButtonClicked(wxCommandEvent& event)
 void MainFrame::OnAboutButtonClicked(wxCommandEvent& event)
 {
     const wxString About =
-        wxT("VMMail v1.0\n\n") \
+        wxT("VMMail v2.0\n\n") \
         wxT("An Open Source Mail User Agent\n") \
         wxT("Developed by: Askarali Azimov\n") \
         wxT("wxWidgets: 3.1.3\n") \

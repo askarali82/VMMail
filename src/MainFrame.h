@@ -19,6 +19,11 @@ public:
     {
         m_LoadingTimer.StartOnce(1000);
     }
+    void CollectEmailAddresses(const Message::EmailAddress &Address = Message::EmailAddress());
+    const std::vector<Message::EmailAddress> & GetEmailAddresses() const
+    {
+        return EmailAddresses;
+    }
 
 protected:
     void OnLoadingTimer(wxTimerEvent& event) override;
@@ -56,6 +61,7 @@ private:
     std::vector<std::shared_ptr<Folder>> m_Folders;
     std::vector<std::shared_ptr<Message>> m_CurrentMessages;
     std::vector<std::shared_ptr<Message>> m_MessagesToBeMoved;
+    std::vector<Message::EmailAddress> EmailAddresses;
 
     wxDataViewItemArray m_ChangingItems;
 

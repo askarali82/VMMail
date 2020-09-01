@@ -5,6 +5,8 @@
 #include "wx/webview.h"
 #include <wx/arrstr.h>
 #include <vector>
+#include "AddressListFrame.h"
+#include <memory>
 
 enum class EmailType {New, Reply, ReplyAll, Forward};
 
@@ -31,7 +33,6 @@ protected:
     void OnDiscardButtonClicked( wxCommandEvent& event ) override;
     void OnSendButtonClicked( wxCommandEvent& event ) override;
     void OnKeyPressed( wxKeyEvent& event );
-    void OnToFieldChanged(wxCommandEvent& event) override;
     void OnOrderedListButtonClicked( wxCommandEvent& event ) override;
     void OnUnOrderedListButtonClicked( wxCommandEvent& event ) override;
     void OnInsertLinkButtonClicked( wxCommandEvent& event ) override;
@@ -41,6 +42,15 @@ protected:
     void OnStrikethroughButtonClicked( wxCommandEvent& event ) override;
     void OnSubscriptButtonClicked( wxCommandEvent& event ) override;
     void OnSuperscriptButtonClicked( wxCommandEvent& event ) override;
+    void OnToFieldChanged( wxCommandEvent& event ) override;
+    void OnToFieldKeyPressed( wxKeyEvent& event ) override;
+    void OnToFieldEnter( wxCommandEvent& event ) override;
+    void OnCcFieldChanged( wxCommandEvent& event ) override;
+    void OnCcFieldKeyPressed( wxKeyEvent& event ) override;
+    void OnCcFieldEnter( wxCommandEvent& event ) override;
+    void OnBCcFieldChanged( wxCommandEvent& event ) override;
+    void OnBCcFieldKeyPressed( wxKeyEvent& event ) override;
+    void OnBCcFieldEnter( wxCommandEvent& event ) override;
 
 private:
     struct HTMLInlineObject
@@ -58,6 +68,8 @@ private:
     const EmailType m_EmailType;
     const wxString m_Username;
     wxWebView *m_Editor;
+    std::unique_ptr<AddressListFrame> m_AddressListFrame;
+    wxString GetTypedString(long *_From = nullptr, long *_To = nullptr) const;
 
     void PopulateHeaderFields();
     void SetBodyToEditor();
@@ -70,6 +82,7 @@ private:
     void AddHeaders(vmime::messageBuilder &mb);
     void AddBody(vmime::messageBuilder &mb);
     void AddAttachments(vmime::messageBuilder &mb);
+    void OnAddressSelected(const wxString &Address);
     
 #ifdef __WXMSW__
     void SetBitmaps();

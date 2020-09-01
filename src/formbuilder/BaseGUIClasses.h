@@ -222,7 +222,7 @@ class BaseEmailEditorFrame : public wxFrame
 	private:
 
 	protected:
-		wxPanel* m_panel9;
+		wxPanel* m_TextFieldsPanel;
 		wxBoxSizer* m_TopPanelSizer;
 		wxStaticText* m_staticText21;
 		wxTextCtrl* m_FromField;
@@ -264,7 +264,15 @@ class BaseEmailEditorFrame : public wxFrame
 		wxButton* m_SendButton;
 
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnToFieldKeyPressed( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnToFieldChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnToFieldEnter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCcFieldKeyPressed( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnCcFieldChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCcFieldEnter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBCcFieldKeyPressed( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnBCcFieldChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBCcFieldEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAttachmentListBoxSelected( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAddAttachmentButtonClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDeleteAttachmentButtonClicked( wxCommandEvent& event ) { event.Skip(); }
@@ -296,6 +304,30 @@ class BaseEmailEditorFrame : public wxFrame
 		BaseEmailEditorFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1000,700 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~BaseEmailEditorFrame();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class BaseAddressListFrame
+///////////////////////////////////////////////////////////////////////////////
+class BaseAddressListFrame : public wxFrame
+{
+	private:
+
+	protected:
+
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnListBoxKeyDown( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnItemSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnListBoxDblClicked( wxCommandEvent& event ) { event.Skip(); }
+
+
+	public:
+		wxListBox* m_AddressList;
+
+		BaseAddressListFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,200 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxFRAME_SHAPED|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
+
+		~BaseAddressListFrame();
 
 };
 

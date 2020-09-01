@@ -43,12 +43,15 @@ struct Message
         wxString m_Name;
         wxString m_Address;
         wxString m_Text;
+
         EmailAddress() = default;
+
         EmailAddress(const wxString &Name, const wxString &Address):
             m_Name(Name), m_Address(Address)
         {
             GenerateText();
         }
+
         EmailAddress(const wxString &Text): m_Text(Text)
         {
             const int P = m_Text.Find(">");
@@ -74,12 +77,25 @@ struct Message
                 m_Name.Clear();
             }
         }
+
         EmailAddress(const EmailAddress &Other) = default;
+
         void GenerateText()
         {
             m_Text = m_Name.IsEmpty() ? m_Address : m_Name + " <" + m_Address + ">";
         }
+
         EmailAddress & operator = (const EmailAddress &Other) = default;
+
+        bool operator == (const EmailAddress &Other) const
+        {
+            return m_Address == Other.m_Address;
+        }
+
+        bool operator < (const EmailAddress &Other) const
+        {
+            return m_Text < Other.m_Text;
+        }
     };
 
     struct Attachment : public wxObject

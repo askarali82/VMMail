@@ -477,8 +477,8 @@ BaseEmailEditorFrame::BaseEmailEditorFrame( wxWindow* parent, wxWindowID id, con
 	m_Sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_Sizer->SetMinSize( wxSize( 1006,693 ) );
-	m_panel9 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_panel9->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
+	m_TextFieldsPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_TextFieldsPanel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
 	m_TopPanelSizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -487,57 +487,51 @@ BaseEmailEditorFrame::BaseEmailEditorFrame( wxWindow* parent, wxWindowID id, con
 	fgSizer4->SetFlexibleDirection( wxBOTH );
 	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	m_staticText21 = new wxStaticText( m_panel9, wxID_ANY, wxT("From:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21 = new wxStaticText( m_TextFieldsPanel, wxID_ANY, wxT("From:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText21->Wrap( -1 );
 	m_staticText21->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
 
 	fgSizer4->Add( m_staticText21, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_FromField = new wxTextCtrl( m_panel9, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
+	m_FromField = new wxTextCtrl( m_TextFieldsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
 	m_FromField->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
 
 	fgSizer4->Add( m_FromField, 0, wxALL, 5 );
 
-	m_staticText22 = new wxStaticText( m_panel9, wxID_ANY, wxT("To:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText22 = new wxStaticText( m_TextFieldsPanel, wxID_ANY, wxT("To:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText22->Wrap( -1 );
 	m_staticText22->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
 
 	fgSizer4->Add( m_staticText22, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_ToField = new wxTextCtrl( m_panel9, ID_TO_FIELD, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
-	m_ToField->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
-
+	m_ToField = new wxTextCtrl( m_TextFieldsPanel, ID_TO_FIELD, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), wxTE_PROCESS_ENTER );
 	fgSizer4->Add( m_ToField, 0, wxALL, 5 );
 
-	m_staticText23 = new wxStaticText( m_panel9, wxID_ANY, wxT("Cc:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText23 = new wxStaticText( m_TextFieldsPanel, wxID_ANY, wxT("Cc:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText23->Wrap( -1 );
 	m_staticText23->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
 
 	fgSizer4->Add( m_staticText23, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_CCField = new wxTextCtrl( m_panel9, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
-	m_CCField->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
-
+	m_CCField = new wxTextCtrl( m_TextFieldsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), wxTE_PROCESS_ENTER );
 	fgSizer4->Add( m_CCField, 0, wxALL, 5 );
 
-	m_staticText24 = new wxStaticText( m_panel9, wxID_ANY, wxT("BCc:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24 = new wxStaticText( m_TextFieldsPanel, wxID_ANY, wxT("BCc:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText24->Wrap( -1 );
 	m_staticText24->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
 
 	fgSizer4->Add( m_staticText24, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_BCCField = new wxTextCtrl( m_panel9, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
-	m_BCCField->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
-
+	m_BCCField = new wxTextCtrl( m_TextFieldsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), wxTE_PROCESS_ENTER );
 	fgSizer4->Add( m_BCCField, 0, wxALL, 5 );
 
-	m_staticText25 = new wxStaticText( m_panel9, wxID_ANY, wxT("Subject:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText25 = new wxStaticText( m_TextFieldsPanel, wxID_ANY, wxT("Subject:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText25->Wrap( -1 );
 	m_staticText25->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
 
 	fgSizer4->Add( m_staticText25, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_Subject = new wxTextCtrl( m_panel9, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
+	m_Subject = new wxTextCtrl( m_TextFieldsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 400,-1 ), 0 );
 	m_Subject->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
 
 	fgSizer4->Add( m_Subject, 0, wxALL, 5 );
@@ -548,19 +542,19 @@ BaseEmailEditorFrame::BaseEmailEditorFrame( wxWindow* parent, wxWindowID id, con
 
 	m_TopPanelSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 
-	m_AttachmentList = new wxListBox( m_panel9, ID_ATTACHMENTLIST, wxDefaultPosition, wxSize( 280,-1 ), 0, NULL, wxLB_HSCROLL );
+	m_AttachmentList = new wxListBox( m_TextFieldsPanel, ID_ATTACHMENTLIST, wxDefaultPosition, wxSize( 280,-1 ), 0, NULL, wxLB_HSCROLL );
 	m_AttachmentList->Hide();
 
 	m_TopPanelSizer->Add( m_AttachmentList, 0, wxALL|wxEXPAND, 5 );
 
 	m_AttachButtonsSizer = new wxBoxSizer( wxVERTICAL );
 
-	m_AddAttachmentButton = new wxButton( m_panel9, ID_ADDATTACHMENT, wxT("Add Attachment"), wxDefaultPosition, wxSize( 160,-1 ), 0 );
+	m_AddAttachmentButton = new wxButton( m_TextFieldsPanel, ID_ADDATTACHMENT, wxT("Add Attachment"), wxDefaultPosition, wxSize( 160,-1 ), 0 );
 
 	m_AddAttachmentButton->SetBitmap( wxBitmap( attach_xpm ) );
 	m_AttachButtonsSizer->Add( m_AddAttachmentButton, 0, wxALIGN_RIGHT|wxALL, 2 );
 
-	m_DeleteAttachmentButton = new wxButton( m_panel9, ID_DELETEATTACHMENT, wxT("Delete Attachment"), wxDefaultPosition, wxSize( 160,-1 ), 0 );
+	m_DeleteAttachmentButton = new wxButton( m_TextFieldsPanel, ID_DELETEATTACHMENT, wxT("Delete Attachment"), wxDefaultPosition, wxSize( 160,-1 ), 0 );
 
 	m_DeleteAttachmentButton->SetBitmap( wxBitmap( delattach_xpm ) );
 	m_DeleteAttachmentButton->Hide();
@@ -571,10 +565,10 @@ BaseEmailEditorFrame::BaseEmailEditorFrame( wxWindow* parent, wxWindowID id, con
 	m_TopPanelSizer->Add( m_AttachButtonsSizer, 1, wxEXPAND, 5 );
 
 
-	m_panel9->SetSizer( m_TopPanelSizer );
-	m_panel9->Layout();
-	m_TopPanelSizer->Fit( m_panel9 );
-	m_Sizer->Add( m_panel9, 1, wxEXPAND | wxALL, 2 );
+	m_TextFieldsPanel->SetSizer( m_TopPanelSizer );
+	m_TextFieldsPanel->Layout();
+	m_TopPanelSizer->Fit( m_TextFieldsPanel );
+	m_Sizer->Add( m_TextFieldsPanel, 1, wxEXPAND | wxALL, 2 );
 
 	m_EditorPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_EditorPanel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DDKSHADOW ) );
@@ -673,7 +667,15 @@ BaseEmailEditorFrame::BaseEmailEditorFrame( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	m_ToField->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseEmailEditorFrame::OnToFieldKeyPressed ), NULL, this );
 	m_ToField->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BaseEmailEditorFrame::OnToFieldChanged ), NULL, this );
+	m_ToField->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BaseEmailEditorFrame::OnToFieldEnter ), NULL, this );
+	m_CCField->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseEmailEditorFrame::OnCcFieldKeyPressed ), NULL, this );
+	m_CCField->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BaseEmailEditorFrame::OnCcFieldChanged ), NULL, this );
+	m_CCField->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BaseEmailEditorFrame::OnCcFieldEnter ), NULL, this );
+	m_BCCField->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseEmailEditorFrame::OnBCcFieldKeyPressed ), NULL, this );
+	m_BCCField->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BaseEmailEditorFrame::OnBCcFieldChanged ), NULL, this );
+	m_BCCField->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BaseEmailEditorFrame::OnBCcFieldEnter ), NULL, this );
 	m_AttachmentList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BaseEmailEditorFrame::OnAttachmentListBoxSelected ), NULL, this );
 	m_AddAttachmentButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnAddAttachmentButtonClicked ), NULL, this );
 	m_DeleteAttachmentButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnDeleteAttachmentButtonClicked ), NULL, this );
@@ -703,7 +705,15 @@ BaseEmailEditorFrame::BaseEmailEditorFrame( wxWindow* parent, wxWindowID id, con
 BaseEmailEditorFrame::~BaseEmailEditorFrame()
 {
 	// Disconnect Events
+	m_ToField->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseEmailEditorFrame::OnToFieldKeyPressed ), NULL, this );
 	m_ToField->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BaseEmailEditorFrame::OnToFieldChanged ), NULL, this );
+	m_ToField->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BaseEmailEditorFrame::OnToFieldEnter ), NULL, this );
+	m_CCField->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseEmailEditorFrame::OnCcFieldKeyPressed ), NULL, this );
+	m_CCField->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BaseEmailEditorFrame::OnCcFieldChanged ), NULL, this );
+	m_CCField->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BaseEmailEditorFrame::OnCcFieldEnter ), NULL, this );
+	m_BCCField->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseEmailEditorFrame::OnBCcFieldKeyPressed ), NULL, this );
+	m_BCCField->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BaseEmailEditorFrame::OnBCcFieldChanged ), NULL, this );
+	m_BCCField->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( BaseEmailEditorFrame::OnBCcFieldEnter ), NULL, this );
 	m_AttachmentList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BaseEmailEditorFrame::OnAttachmentListBoxSelected ), NULL, this );
 	m_AddAttachmentButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnAddAttachmentButtonClicked ), NULL, this );
 	m_DeleteAttachmentButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnDeleteAttachmentButtonClicked ), NULL, this );
@@ -728,5 +738,36 @@ BaseEmailEditorFrame::~BaseEmailEditorFrame()
 	this->Disconnect( m_InsertLinkButton->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnInsertLinkButtonClicked ) );
 	m_DiscardButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnDiscardButtonClicked ), NULL, this );
 	m_SendButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseEmailEditorFrame::OnSendButtonClicked ), NULL, this );
+
+}
+
+BaseAddressListFrame::BaseAddressListFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+
+	m_AddressList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	bSizer16->Add( m_AddressList, 1, wxALL|wxEXPAND, 1 );
+
+
+	this->SetSizer( bSizer16 );
+	this->Layout();
+
+	this->Centre( wxBOTH );
+
+	// Connect Events
+	m_AddressList->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseAddressListFrame::OnListBoxKeyDown ), NULL, this );
+	m_AddressList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BaseAddressListFrame::OnItemSelected ), NULL, this );
+	m_AddressList->Connect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( BaseAddressListFrame::OnListBoxDblClicked ), NULL, this );
+}
+
+BaseAddressListFrame::~BaseAddressListFrame()
+{
+	// Disconnect Events
+	m_AddressList->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( BaseAddressListFrame::OnListBoxKeyDown ), NULL, this );
+	m_AddressList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BaseAddressListFrame::OnItemSelected ), NULL, this );
+	m_AddressList->Disconnect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( BaseAddressListFrame::OnListBoxDblClicked ), NULL, this );
 
 }

@@ -1,6 +1,5 @@
 #include "EmailEditorFrame.h"
 #include "EmailClientApp.h"
-#include "MainFrame.h"
 #include <wx/fontdlg.h>
 #include <wx/font.h>
 #include <wx/clipbrd.h>
@@ -668,6 +667,11 @@ void EmailEditorFrame::OnKeyPressed(wxKeyEvent& event)
 {
     if (event.GetKeyCode() == WXK_ESCAPE)
     {
+        if (m_AddressListFrame && m_AddressListFrame->IsVisible())
+        {
+            m_AddressListFrame->Show(false);
+            return;
+        }
         if (wxMessageBox(
             "Are you sure you want to discard this draft?", "Discard draft?", wxYES_NO, this) == wxYES)
         {
@@ -679,11 +683,245 @@ void EmailEditorFrame::OnKeyPressed(wxKeyEvent& event)
 }
 
 
+void EmailEditorFrame::OnToFieldKeyPressed(wxKeyEvent& event)
+{
+    const auto Key = event.GetKeyCode();
+    if (Key == WXK_ESCAPE)
+    {
+        if (m_AddressListFrame && m_AddressListFrame->IsVisible())
+        {
+            m_AddressListFrame->Show(false);
+        }
+    }
+    else if (Key == WXK_DOWN || Key == WXK_UP)
+    {
+        if (m_AddressListFrame && m_AddressListFrame->IsVisible())
+        {
+            m_AddressListFrame->m_AddressList->SetFocus();
+        }
+    }
+    event.Skip();
+}
+
+
+void EmailEditorFrame::OnToFieldEnter(wxCommandEvent& event)
+{
+    if (m_AddressListFrame && m_AddressListFrame->IsVisible())
+    {
+        const auto Idx = m_AddressListFrame->m_AddressList->GetSelection();
+        if (Idx != wxNOT_FOUND)
+        {
+            OnAddressSelected(m_AddressListFrame->m_AddressList->GetString(Idx));
+        }
+        m_AddressListFrame->Show(false);
+    }
+}
+
+
 void EmailEditorFrame::OnToFieldChanged(wxCommandEvent& event)
 {
     if (m_EmailType == EmailType::Forward)
     {
         SetTitle("Forwarding To: " + m_ToField->GetValue());
+    }
+    if (!m_ToField->HasFocus())
+    {
+        return;
+    }
+    if (!m_AddressListFrame)
+    {
+        using std::placeholders::_1;
+        m_AddressListFrame.reset(new AddressListFrame(this));
+        m_AddressListFrame->OnItemSelectSignal = std::bind(&EmailEditorFrame::OnAddressSelected, this, _1);
+    }
+    if (!m_AddressListFrame->IsVisible())
+    {
+        int X = m_ToField->GetPosition().x;
+        int Y = m_ToField->GetPosition().y;
+        m_TextFieldsPanel->ClientToScreen(&X, &Y);
+        m_AddressListFrame->Move(X, Y + m_ToField->GetSize().GetHeight());
+        m_AddressListFrame->m_TargetTextCtrl = m_ToField;
+        m_AddressListFrame->Show();
+    }
+    m_AddressListFrame->FindAndSelectAddress(GetTypedString());
+}
+
+
+void EmailEditorFrame::OnCcFieldKeyPressed(wxKeyEvent& event)
+{
+    OnToFieldKeyPressed(event);
+}
+
+
+void EmailEditorFrame::OnCcFieldEnter(wxCommandEvent& event)
+{
+    OnToFieldEnter(event);
+}
+
+
+void EmailEditorFrame::OnCcFieldChanged(wxCommandEvent& event)
+{
+    if (!m_CCField->HasFocus())
+    {
+        return;
+    }
+    if (!m_AddressListFrame)
+    {
+        using std::placeholders::_1;
+        m_AddressListFrame.reset(new AddressListFrame(this));
+        m_AddressListFrame->OnItemSelectSignal = std::bind(&EmailEditorFrame::OnAddressSelected, this, _1);
+    }
+    if (!m_AddressListFrame->IsVisible())
+    {
+        int X = m_CCField->GetPosition().x;
+        int Y = m_CCField->GetPosition().y;
+        m_TextFieldsPanel->ClientToScreen(&X, &Y);
+        m_AddressListFrame->Move(X, Y + m_CCField->GetSize().GetHeight());
+        m_AddressListFrame->m_TargetTextCtrl = m_CCField;
+        m_AddressListFrame->Show();
+    }
+    m_AddressListFrame->FindAndSelectAddress(GetTypedString());
+}
+
+
+void EmailEditorFrame::OnBCcFieldKeyPressed(wxKeyEvent& event)
+{
+    OnToFieldKeyPressed(event);
+}
+
+
+void EmailEditorFrame::OnBCcFieldEnter(wxCommandEvent& event)
+{
+    OnToFieldEnter(event);
+}
+
+
+void EmailEditorFrame::OnBCcFieldChanged(wxCommandEvent& event)
+{
+    if (!m_BCCField->HasFocus())
+    {
+        return;
+    }
+    if (!m_AddressListFrame)
+    {
+        using std::placeholders::_1;
+        m_AddressListFrame.reset(new AddressListFrame(this));
+        m_AddressListFrame->OnItemSelectSignal = std::bind(&EmailEditorFrame::OnAddressSelected, this, _1);
+    }
+    if (!m_AddressListFrame->IsVisible())
+    {
+        int X = m_BCCField->GetPosition().x;
+        int Y = m_BCCField->GetPosition().y;
+        m_TextFieldsPanel->ClientToScreen(&X, &Y);
+        m_AddressListFrame->Move(X, Y + m_BCCField->GetSize().GetHeight());
+        m_AddressListFrame->m_TargetTextCtrl = m_BCCField;
+        m_AddressListFrame->Show();
+    }
+    m_AddressListFrame->FindAndSelectAddress(GetTypedString());
+}
+
+
+wxString EmailEditorFrame::GetTypedString(long *_From, long *_To) const
+{
+    int From = -1;
+    int To = -1;
+    const int L = m_AddressListFrame->m_TargetTextCtrl->GetInsertionPoint();
+    const wxString Str = m_AddressListFrame->m_TargetTextCtrl->GetValue();
+    if (L == m_AddressListFrame->m_TargetTextCtrl->GetLastPosition())
+    {
+        for (int i = Str.Length() - 1; i >= 0; i--)
+        {
+            if (Str[i] == L';')
+            {
+                if (From == -1 && To == -1)
+                {
+                    continue;
+                }
+                if (From == -1)
+                {
+                    From = i + 1;
+                    break;
+                }
+            }
+            else if (To == -1)
+            {
+                To = i;
+            }
+        }
+    }
+    else if (L == 0)
+    {
+        for (int i = 0; i < Str.Length(); i++)
+        {
+            if (Str[i] == L';')
+            {
+                if (From == -1 && To == -1)
+                {
+                    continue;
+                }
+                if (To == -1)
+                {
+                    To = i - 1;
+                    break;
+                }
+            }
+            else if (From == -1)
+            {
+                From = i;
+            }
+        }
+    }
+    else
+    {
+        for (int i = L - 1; i >= 0; i--)
+        {
+            if (Str[i] == L';')
+            {
+                From = i + 1;
+                break;
+            }
+        }
+        for (int i = L; i < Str.Length(); i++)
+        {
+            if (Str[i] == L';')
+            {
+                To = i - 1;
+                break;
+            }
+        }
+    }
+    if (From == -1)
+    {
+        From = 0;
+    }
+    if (To == -1)
+    {
+        To = Str.Length() - 1;
+    }
+    if (_From != nullptr)
+    {
+        *_From = From;
+    }
+    if (_To != nullptr)
+    {
+        *_To = To;
+    }
+    if (From >= 0 && To >= 0)
+    {
+        return Str.Mid(From, (To - From) + 1);
+    }
+    return L"";
+}
+
+
+void EmailEditorFrame::OnAddressSelected(const wxString &Address)
+{
+    if (m_AddressListFrame->m_TargetTextCtrl != nullptr)
+    {
+        long From;
+        long To;
+        GetTypedString(&From, &To);
+        m_AddressListFrame->m_TargetTextCtrl->Replace(From, To + 1, Address + L";");
     }
 }
 
