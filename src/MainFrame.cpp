@@ -184,7 +184,7 @@ void MainFrame::PopulateUserFolders(const bool NewFolders)
     if (DefFolderItem.IsOk())
     {
         m_AccountListTree->Select(DefFolderItem);
-        m_AccountListTree->EnsureVisible(DefFolderItem, 0);
+        m_AccountListTree->EnsureVisible(DefFolderItem);
     }
 }
 
@@ -341,6 +341,7 @@ void MainFrame::OnFolderSelected(wxDataViewEvent& event)
         return;
     }
     Folder* folder = reinterpret_cast<Folder*>(Item.GetID());
+    bool LastFolderNeedsAutoSelected = false;
     if (m_CurrentFolder.get() == folder)
     {
         return;
@@ -350,13 +351,24 @@ void MainFrame::OnFolderSelected(wxDataViewEvent& event)
         m_StatusBar->SetStatusText("Double click to change account settings", 3);
         if (!folder->m_Childs.empty())
         {
-            return;
+            if (m_CurrentUser.IsEmpty() || m_CurrentUser == folder->m_Name ||
+                m_UserLastFolderMap.find(folder->m_Name) == m_UserLastFolderMap.end())
+            {
+                return;
+            }
+            m_MessagesToBeMoved.clear();
+            m_CurrentUser = folder->m_Name;
+            m_CurrentFolder = FindUserFolder(m_CurrentUser, m_UserLastFolderMap[m_CurrentUser]);
+            LastFolderNeedsAutoSelected = true;
         }
-        m_CurrentUser = folder->m_Name;
-        m_CurrentFolder = FindUserFolder(m_CurrentUser);
-        if (!GetPasswordFromUser(m_CurrentUser))
+        else
         {
-            return;
+            m_CurrentUser = folder->m_Name;
+            m_CurrentFolder = FindUserFolder(m_CurrentUser);
+            if (!GetPasswordFromUser(m_CurrentUser))
+            {
+                return;
+            }
         }
     }
     else
@@ -382,6 +394,21 @@ void MainFrame::OnFolderSelected(wxDataViewEvent& event)
     m_StatusBar->SetStatusText(std::to_string(m_CurrentMessages.size()) +" messages");
     m_StatusBar->SetStatusText("Current User: " + m_CurrentUser, 1);
     m_StatusBar->SetStatusText("Current Folder: " + FolderName, 2);
+    if (!m_CurrentUser.IsEmpty() && FolderName != wxEmptyString)
+    {
+        if (LastFolderNeedsAutoSelected)
+        {
+            const wxDataViewItem Item =
+                m_AccountsViewModel->FindItemByUserFolder(m_CurrentUser, FolderName);
+            if (Item.IsOk())
+            {
+                m_AccountListTree->Select(Item);
+                m_AccountListTree->EnsureVisible(Item);
+                m_StatusBar->SetStatusText("", 3);
+            }
+        }
+        m_UserLastFolderMap[m_CurrentUser] = FolderName;
+    }
     if (!m_CurrentMessages.empty())
     {
         StopAnimation();
@@ -475,6 +502,10 @@ void MainFrame::OnLoadingThreadCompletion(wxCommandEvent& event)
         m_StatusBar->SetStatusText("Current User: " + NotificationData->m_RequstedUserName, 1);
         m_StatusBar->SetStatusText("Current Folder: " + NotificationData->m_ResultedFolderName, 2);
         m_CurrentFolder = FindUserFolder(NotificationData->m_RequstedUserName, NotificationData->m_ResultedFolderName);
+        if (!m_CurrentUser.IsEmpty() && m_CurrentFolder && !m_CurrentFolder->m_Name.IsEmpty())
+        {
+            m_UserLastFolderMap[m_CurrentUser] = m_CurrentFolder->m_Name;
+        }
         PopulateMessageList();
         AutoSelectMessage(m_MessagesViewModel->GetFirstItem());
     }

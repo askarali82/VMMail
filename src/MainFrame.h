@@ -58,6 +58,8 @@ private:
     wxString m_CurrentUser;
     std::shared_ptr<Folder> m_CurrentFolder;
 
+    std::map<wxString, wxString> m_UserLastFolderMap;
+
     std::vector<std::shared_ptr<Folder>> m_Folders;
     std::vector<std::shared_ptr<Message>> m_CurrentMessages;
     std::vector<std::shared_ptr<Message>> m_MessagesToBeMoved;
@@ -66,13 +68,13 @@ private:
     wxDataViewItemArray m_ChangingItems;
 
     void MoveMessages(std::shared_ptr<Folder> Source, std::shared_ptr<Folder> Dest);
-
     wxString SelectedItemToUserName() const;
     void AddUserFoldersToList(std::vector<std::shared_ptr<Folder>> Folders);
     bool GetPasswordFromUser(const wxString &UserName) const;
     void AddColumnToAccountList();
     void AddColumnsToMessageList();
-    std::shared_ptr<Folder> FindUserFolder(const wxString &UserName, const wxString &FolderName = wxEmptyString) const;
+    std::shared_ptr<Folder> FindUserFolder(
+        const wxString &UserName, const wxString &FolderName = wxEmptyString) const;
     void PopulateUserFolders(const bool NewFolders);
     void PopulateMessageList();
     void AutoSelectMessage(const wxDataViewItem &Item);
